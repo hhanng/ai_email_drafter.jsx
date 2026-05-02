@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Email Drafter</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --ink: #1a1a2e;
+      --paper: #f5f0e8;
+      --cream: #ede8dc;
+      --accent: #c4492a;
+      --accent2: #2a6b8a;
+      --muted: #8a8070;
+      --border: #d4cec0;
+      --white: #fdfaf5;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .header {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 3px solid var(--accent);
+      flex-shrink: 0;
+    }
+
+    .header-icon {
+      width: 36px; height: 36px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+
+    .header-title {
+      font-family: Georgia, serif;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .header-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      margin-left: auto;
+      opacity: 0.7;
+    }
+
+    .main {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Chat Panel */
+    .chat-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+      background: #f9f5ee;
+      min-width: 0;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      scrollbar-width: thin;
+    }
+
+    .msg { display: flex; gap: 10px; animation: fadeUp 0.3s ease; }
+    .msg.user { flex-direction: row-reverse; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .avatar.ai { background: var(--ink); color: var(--paper); }
+    .avatar.user { background: var(--accent); color: white; }
+
+    .bubble {
+      max-width: 78%;
+      padding: 10px 14px;
+      font-size: 13.5px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .msg.ai .bubble {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent2);
+      border-radius: 0 8px 8px 8px;
+    }
+
+    .msg.user .bubble {
+      background: var(--ink);
+      color: var(--paper);
+      border-radius: 8px 0 8px 8px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12.5px;
+    }
+
+    .typing {
+      display: flex; gap: 4px;
+      padding: 14px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent2);
+      border-radius: 0 8px 8px 8px;
+      width: fit-content;
+    }
+
+    .dot {
+      width: 6px; height: 6px;
+      background: var(--muted);
+      border-radius: 50%;
+      animation: bounce 1.2s infinite;
+    }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-5px); }
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      padding: 10px 16px;
+      border-top: 1px solid var(--border);
+      background: var(--cream);
+    }
+
+    .chip {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 11.5px;
+      font-family: 'DM Mono', monospace;
+      color: var(--muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .chip:hover { border-color: var(--accent); color: var(--accent); }
+
+    .chat-input-area {
+      padding: 14px 16px;
+      border-top: 1px solid var(--border);
+      background: var(--white);
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    textarea {
+      flex: 1;
+      border: 1px solid var(--border);
+      background: var(--paper);
+      padding: 10px 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13.5px;
+      color: var(--ink);
+      resize: none;
+      border-radius: 4px;
+      outline: none;
+      max-height: 100px;
+      line-height: 1.5;
+    }
+    textarea:focus { border-color: var(--accent2); }
+
+    .send-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 18px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .send-btn:hover { background: #a33920; }
+    .send-btn:disabled { background: var(--muted); cursor: not-allowed; }
+
+    /* Email Panel */
+    .email-panel {
+      width: 400px;
+      display: flex;
+      flex-direction: column;
+      background: var(--white);
+      flex-shrink: 0;
+    }
+
+    .panel-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--cream);
+    }
+
+    .panel-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .copy-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 4px 10px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+    .copy-btn:disabled { cursor: not-allowed; opacity: 0.5; }
+
+    .email-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .email-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 12px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .email-placeholder .icon { font-size: 40px; opacity: 0.4; }
+    .email-placeholder p {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      max-width: 240px;
+    }
+
+    .email-field {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+    }
+
+    .field-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted);
+      width: 55px;
+      flex-shrink: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding-top: 1px;
+    }
+
+    .field-val { font-size: 13px; font-weight: 500; line-height: 1.5; }
+    .field-subject { font-family: Georgia, serif; font-size: 15px; font-weight: 700; }
+
+    .email-body {
+      padding: 18px 0;
+      white-space: pre-wrap;
+      line-height: 1.75;
+      font-size: 13.5px;
+    }
+
+    /* API key modal */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100;
+    }
+
+    .modal {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px;
+      width: 420px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .modal h3 { font-family: Georgia, serif; font-size: 18px; }
+    .modal p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    .modal input {
+      border: 1px solid var(--border);
+      background: var(--paper);
+      padding: 10px 12px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      border-radius: 4px;
+      outline: none;
+      width: 100%;
+    }
+    .modal input:focus { border-color: var(--accent2); }
+
+    .modal-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 10px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+    }
+    .modal-btn:hover { background: #a33920; }
+
+    .modal-note {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      background: var(--cream);
+      padding: 8px 10px;
+      border-radius: 4px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<!-- API Key Modal -->
+<div class="modal-overlay" id="apiModal">
+  <div class="modal">
+    <h3>🔑 Enter your API Key</h3>
+    <p>To use AI Email Drafter, you need a free Anthropic API key. It stays in your browser only — never sent anywhere else.</p>
+    <input type="password" id="apiKeyInput" placeholder="sk-ant-..." />
+    <div class="modal-note">
+      Get your key at <strong>console.anthropic.com</strong> → API Keys → Create key
+    </div>
+    <button class="modal-btn" onclick="saveApiKey()">START DRAFTING →</button>
+  </div>
+</div>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-icon">✉</div>
+  <span class="header-title">AI Email Drafter</span>
+  <span class="header-sub">made by han han</span>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+  <!-- Chat Panel -->
+  <div class="chat-panel">
+    <div class="chat-messages" id="chatMessages">
+      <div class="msg ai">
+        <div class="avatar ai">✦</div>
+        <div class="bubble">Hello! I'm your AI email drafting assistant. Just describe the email you need — who it's for, what it's about, and the tone you want — and I'll draft it instantly.
+
+Try: "Write a follow-up email to a client who hasn't responded in a week"</div>
+      </div>
+    </div>
+
+    <div class="chips">
+      <button class="chip" onclick="useChip('Write a follow-up email for me')">📋 Follow-up email</button>
+      <button class="chip" onclick="useChip('Write a job application email for me')">🤝 Job application</button>
+      <button class="chip" onclick="useChip('Write an apology email for me')">😔 Apology email</button>
+      <button class="chip" onclick="useChip('Write a thank you note for me')">🎉 Thank you note</button>
+      <button class="chip" onclick="useChip('Write an email to decline an invitation')">❌ Decline invitation</button>
+      <button class="chip" onclick="useChip('Write a meeting request email for me')">💼 Meeting request</button>
+    </div>
+
+    <div class="chat-input-area">
+      <textarea id="userInput" placeholder="Describe the email you need…" rows="2"
+        onkeydown="handleKey(event)"></textarea>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()">SEND →</button>
+    </div>
+  </div>
+
+  <!-- Email Preview Panel -->
+  <div class="email-panel">
+    <div class="panel-header">
+      <span class="panel-title">✉ Draft Preview</span>
+      <button class="copy-btn" id="copyBtn" onclick="copyEmail()" disabled>COPY ALL</button>
+    </div>
+    <div class="email-content" id="emailContent">
+      <div class="email-placeholder">
+        <div class="icon">📝</div>
+        <p>Your drafted email will appear here once you describe what you need in the chat.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let apiKey = '';
+  let currentEmail = null;
+
+  const SYSTEM_PROMPT = `You are an expert email drafting assistant. When a user describes an email they need, draft it professionally.
+Always respond with a JSON object ONLY (no markdown, no extra text) in this exact format:
+{
+  "reply": "A brief friendly message acknowledging the request and mentioning the tone/style chosen",
+  "to": "Suggested recipient description or empty string",
+  "subject": "Email subject line",
+  "body": "Full email body with proper greeting, paragraphs, and sign-off. Use \\n for line breaks."
+}`;
+
+  function saveApiKey() {
+    const key = document.getElementById('apiKeyInput').value.trim();
+    if (!key.startsWith('sk-')) {
+      alert('Please enter a valid Anthropic API key (starts with sk-ant-)');
+      return;
+    }
+    apiKey = key;
+    document.getElementById('apiModal').style.display = 'none';
+  }
+
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }
+
+  function useChip(text) {
+    document.getElementById('userInput').value = text;
+    sendMessage();
+  }
+
+  function addMessage(role, text) {
+    const container = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = `msg ${role}`;
+    div.innerHTML = `
+      <div class="avatar ${role}">${role === 'ai' ? '✦' : 'U'}</div>
+      <div class="bubble">${text}</div>
+    `;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function showTyping() {
+    const container = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = 'msg ai';
+    div.id = 'typing';
+    div.innerHTML = `
+      <div class="avatar ai">✦</div>
+      <div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    `;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function removeTyping() {
+    const t = document.getElementById('typing');
+    if (t) t.remove();
+  }
+
+  function renderEmail(data) {
+    currentEmail = data;
+    document.getElementById('copyBtn').disabled = false;
+    const content = document.getElementById('emailContent');
+    content.innerHTML = `
+      <div>
+        ${data.to ? `
+        <div class="email-field">
+          <span class="field-label">To</span>
+          <span class="field-val">${data.to}</span>
+        </div>` : ''}
+        <div class="email-field">
+          <span class="field-label">Subject</span>
+          <span class="field-val field-subject">${data.subject}</span>
+        </div>
+        <div class="email-body">${data.body}</div>
+      </div>
+    `;
+  }
+
+  function copyEmail() {
+    if (!currentEmail) return;
+    const text = `To: ${currentEmail.to || '[Recipient]'}\nSubject: ${currentEmail.subject}\n\n${currentEmail.body}`;
+    navigator.clipboard.writeText(text);
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✓ COPIED';
+    setTimeout(() => btn.textContent = 'COPY ALL', 2000);
+  }
+
+  async function sendMessage(text) {
+    const input = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const msg = (text || input.value).trim();
+    if (!msg) return;
+
+    input.value = '';
+    sendBtn.disabled = true;
+    addMessage('user', msg);
+    showTyping();
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: SYSTEM_PROMPT,
+          messages: [{ role: 'user', content: msg }]
+        })
+      });
+
+      const data = await res.json();
+      const raw = data.content?.[0]?.text || '{}';
+      let parsed;
+      try {
+        parsed = JSON.parse(raw.replace(/```json|```/g, '').trim());
+      } catch {
+        parsed = { reply: raw, subject: 'Draft Email', body: raw, to: '' };
+      }
+
+      removeTyping();
+      addMessage('ai', parsed.reply || 'Here is your drafted email!');
+      renderEmail(parsed);
+    } catch {
+      removeTyping();
+      addMessage('ai', 'Something went wrong. Check your API key and try again.');
+    }
+
+    sendBtn.disabled = false;
+  }
+</script>
+</body>
+</html>
