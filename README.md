@@ -46,12 +46,6 @@ An AI-powered email drafting app built by Han Han. Just describe the email you n
    npm run dev
    ```
 
-## Tech Stack
-
-- **React** — UI framework
-- **Claude API (claude-sonnet-4)** — AI email generation
-- **Vanilla CSS-in-JS** — styling
-
 ## Project Structure
 
 ```
