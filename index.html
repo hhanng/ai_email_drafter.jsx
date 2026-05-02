@@ -567,7 +567,7 @@ Try: "Write a follow-up email to a client who hasn't responded in a week"</div>
 <script>
   // ── PUT YOUR KEYS HERE ──
   const MY_CLAUDE_KEY = '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';
-  const MY_GEMINI_KEY = 'YAIzaSyDO64YPruQxcu0Ob0-f67a-mPum8NdChkE';
+  const MY_GEMINI_KEY = 'AIzaSyDO64YPruQxcu0Ob0-f67a-mPum8NdChkE';
   const TRIAL_LIMIT = 2;
   // ────────────────────────
 
@@ -601,8 +601,8 @@ Always respond with a JSON object ONLY (no markdown, no extra text) in this exac
   function startTrial() {
     if (trialUsed >= TRIAL_LIMIT) { showTrialUpModal(); return; }
     isTrial = true;
-    aiProvider = 'claude';
-    apiKey = MY_CLAUDE_KEY;
+    aiProvider = 'gemini';
+    apiKey = MY_GEMINI_KEY;
     document.getElementById('welcomeModal').classList.add('hidden');
     updateTrialBadge();
   }
