@@ -40,7 +40,6 @@
       border-bottom: 3px solid var(--accent);
       flex-shrink: 0;
     }
-
     .header-icon {
       width: 36px; height: 36px;
       background: var(--accent);
@@ -48,28 +47,23 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 18px;
     }
+    .header-title { font-family: Georgia, serif; font-size: 20px; font-weight: 700; }
+    .header-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+    .header-sub { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); opacity: 0.7; }
 
-    .header-title {
-      font-family: Georgia, serif;
-      font-size: 20px;
-      font-weight: 700;
-    }
-
-    .header-sub {
+    .trial-badge {
       font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      color: var(--muted);
-      margin-left: auto;
-      opacity: 0.7;
+      font-size: 10px;
+      background: var(--accent);
+      color: white;
+      padding: 3px 9px;
+      border-radius: 20px;
+      letter-spacing: 0.05em;
+      display: none;
     }
 
-    .main {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    }
+    .main { display: flex; flex: 1; overflow: hidden; }
 
-    /* Chat Panel */
     .chat-panel {
       flex: 1;
       display: flex;
@@ -105,7 +99,6 @@
       flex-shrink: 0;
       margin-top: 2px;
     }
-
     .avatar.ai { background: var(--ink); color: var(--paper); }
     .avatar.user { background: var(--accent); color: white; }
 
@@ -116,14 +109,12 @@
       line-height: 1.6;
       white-space: pre-wrap;
     }
-
     .msg.ai .bubble {
       background: var(--white);
       border: 1px solid var(--border);
       border-left: 3px solid var(--accent2);
       border-radius: 0 8px 8px 8px;
     }
-
     .msg.user .bubble {
       background: var(--ink);
       color: var(--paper);
@@ -141,7 +132,6 @@
       border-radius: 0 8px 8px 8px;
       width: fit-content;
     }
-
     .dot {
       width: 6px; height: 6px;
       background: var(--muted);
@@ -164,7 +154,6 @@
       border-top: 1px solid var(--border);
       background: var(--cream);
     }
-
     .chip {
       background: var(--white);
       border: 1px solid var(--border);
@@ -187,7 +176,6 @@
       gap: 10px;
       align-items: flex-end;
     }
-
     textarea {
       flex: 1;
       border: 1px solid var(--border);
@@ -221,7 +209,6 @@
     .send-btn:hover { background: #a33920; }
     .send-btn:disabled { background: var(--muted); cursor: not-allowed; }
 
-    /* Email Panel */
     .email-panel {
       width: 400px;
       display: flex;
@@ -229,7 +216,6 @@
       background: var(--white);
       flex-shrink: 0;
     }
-
     .panel-header {
       padding: 14px 18px;
       border-bottom: 1px solid var(--border);
@@ -238,7 +224,6 @@
       justify-content: space-between;
       background: var(--cream);
     }
-
     .panel-title {
       font-family: 'DM Mono', monospace;
       font-size: 11px;
@@ -247,7 +232,6 @@
       text-transform: uppercase;
       color: var(--muted);
     }
-
     .copy-btn {
       background: none;
       border: 1px solid var(--border);
@@ -263,11 +247,7 @@
     .copy-btn:hover { border-color: var(--accent2); color: var(--accent2); }
     .copy-btn:disabled { cursor: not-allowed; opacity: 0.5; }
 
-    .email-content {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px;
-    }
+    .email-content { flex: 1; overflow-y: auto; padding: 20px; }
 
     .email-placeholder {
       display: flex;
@@ -279,7 +259,6 @@
       color: var(--muted);
       text-align: center;
     }
-
     .email-placeholder .icon { font-size: 40px; opacity: 0.4; }
     .email-placeholder p {
       font-family: 'DM Mono', monospace;
@@ -288,13 +267,7 @@
       max-width: 240px;
     }
 
-    .email-field {
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      gap: 10px;
-    }
-
+    .email-field { padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px; }
     .field-label {
       font-family: 'DM Mono', monospace;
       font-size: 11px;
@@ -306,46 +279,56 @@
       letter-spacing: 0.05em;
       padding-top: 1px;
     }
-
     .field-val { font-size: 13px; font-weight: 500; line-height: 1.5; }
     .field-subject { font-family: Georgia, serif; font-size: 15px; font-weight: 700; }
+    .email-body { padding: 18px 0; white-space: pre-wrap; line-height: 1.75; font-size: 13.5px; }
 
-    .email-body {
-      padding: 18px 0;
-      white-space: pre-wrap;
-      line-height: 1.75;
-      font-size: 13.5px;
-    }
-
-    /* API key modal */
+    /* Modals */
     .modal-overlay {
       position: fixed; inset: 0;
-      background: rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.65);
       display: flex; align-items: center; justify-content: center;
       z-index: 100;
     }
+    .modal-overlay.hidden { display: none; }
 
     .modal {
       background: var(--white);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 14px;
       padding: 28px;
-      width: 420px;
+      width: 440px;
       display: flex;
       flex-direction: column;
       gap: 14px;
     }
-
-    .modal h3 { font-family: Georgia, serif; font-size: 18px; }
+    .modal h3 { font-family: Georgia, serif; font-size: 20px; }
     .modal p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    .ai-picker { display: flex; gap: 10px; }
+    .ai-option {
+      flex: 1;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 10px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      background: var(--paper);
+    }
+    .ai-option:hover { border-color: var(--accent2); }
+    .ai-option.selected { border-color: var(--accent); background: var(--cream); }
+    .ai-option .ai-logo { font-size: 24px; margin-bottom: 5px; }
+    .ai-option .ai-name { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; }
+    .ai-option .ai-hint { font-size: 10px; color: var(--muted); margin-top: 2px; }
 
     .modal input {
       border: 1px solid var(--border);
       background: var(--paper);
-      padding: 10px 12px;
+      padding: 11px 12px;
       font-family: 'DM Mono', monospace;
       font-size: 12px;
-      border-radius: 4px;
+      border-radius: 6px;
       outline: none;
       width: 100%;
     }
@@ -355,74 +338,72 @@
       background: var(--accent);
       color: white;
       border: none;
-      border-radius: 4px;
-      padding: 10px;
+      border-radius: 6px;
+      padding: 12px;
       font-family: 'DM Mono', monospace;
       font-size: 12px;
       font-weight: 500;
       cursor: pointer;
       letter-spacing: 0.05em;
+      transition: background 0.2s;
     }
     .modal-btn:hover { background: #a33920; }
+    .modal-btn.outline {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .modal-btn.outline:hover { border-color: var(--accent2); color: var(--accent2); background: none; }
 
     .modal-note {
       font-family: 'DM Mono', monospace;
       font-size: 11px;
       color: var(--muted);
       background: var(--cream);
-      padding: 8px 10px;
-      border-radius: 4px;
-      line-height: 1.6;
+      padding: 10px 12px;
+      border-radius: 6px;
+      line-height: 1.8;
     }
+    .modal-note a { color: var(--accent2); text-decoration: none; }
 
-    /* Tab bar - hidden on desktop */
+    .divider {
+      display: flex; align-items: center; gap: 10px;
+      color: var(--muted); font-size: 11px; font-family: 'DM Mono', monospace;
+    }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .trial-up-emoji { font-size: 38px; text-align: center; }
+    .center { text-align: center; }
+
+    /* Tab bar hidden on desktop */
     .tab-bar { display: none; }
 
-    /* ── Mobile ── */
     @media (max-width: 640px) {
       body { height: 100dvh; }
-
       .header { padding: 12px 16px; }
       .header-title { font-size: 17px; }
       .header-sub { display: none; }
-
       .main { flex-direction: column; position: relative; overflow: hidden; }
 
-      /* Full-screen panels, switched by tabs */
       .chat-panel {
-        position: absolute;
-        inset: 0;
-        border-right: none;
+        position: absolute; inset: 0; border-right: none;
         transition: transform 0.3s ease, opacity 0.3s ease;
       }
-      .chat-panel.hidden {
-        transform: translateX(-100%);
-        opacity: 0;
-        pointer-events: none;
-      }
+      .chat-panel.hidden { transform: translateX(-100%); opacity: 0; pointer-events: none; }
 
       .email-panel {
-        position: absolute;
-        inset: 0;
-        width: 100%;
+        position: absolute; inset: 0; width: 100%;
         transition: transform 0.3s ease, opacity 0.3s ease;
       }
-      .email-panel.hidden {
-        transform: translateX(100%);
-        opacity: 0;
-        pointer-events: none;
-      }
+      .email-panel.hidden { transform: translateX(100%); opacity: 0; pointer-events: none; }
 
-      /* Bottom tab bar */
       .tab-bar {
         display: flex;
         border-top: 1px solid var(--border);
         background: var(--white);
         flex-shrink: 0;
-        position: relative;
         z-index: 10;
       }
-
       .tab-btn {
         flex: 1;
         padding: 10px 8px 14px;
@@ -443,23 +424,13 @@
       .tab-btn .tab-icon { font-size: 20px; }
       .tab-btn.active { color: var(--accent); border-top-color: var(--accent); }
 
-      /* Chips: horizontal scroll */
-      .chips {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        scrollbar-width: none;
-        padding: 10px 14px;
-      }
+      .chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 10px 14px; }
       .chips::-webkit-scrollbar { display: none; }
       .chip { font-size: 12px; padding: 7px 14px; }
-
-      /* Bigger touch targets */
       textarea { font-size: 16px; }
       .send-btn { padding: 12px 16px; }
       .chat-input-area { padding: 10px 14px 16px; }
-
-      /* Modal full width */
-      .modal { width: 92%; padding: 22px 18px; }
+      .modal { width: 92%; padding: 20px 16px; }
       .modal input { font-size: 14px; padding: 12px; }
       .modal-btn { padding: 13px; font-size: 13px; }
     }
@@ -467,16 +438,68 @@
 </head>
 <body>
 
-<!-- API Key Modal -->
-<div class="modal-overlay" id="apiModal">
+<!-- Welcome Modal -->
+<div class="modal-overlay" id="welcomeModal">
   <div class="modal">
-    <h3>🔑 Enter your API Key</h3>
-    <p>To use AI Email Drafter, you need a free Anthropic API key. It stays in your browser only — never sent anywhere else.</p>
-    <input type="password" id="apiKeyInput" placeholder="sk-ant-..." />
-    <div class="modal-note">
-      Get your key at <strong>console.anthropic.com</strong> → API Keys → Create key
+    <h3>✉ AI Email Drafter</h3>
+    <p>Draft polished emails instantly using AI. Try 2 free drafts on us, or use your own API key for unlimited access.</p>
+
+    <button class="modal-btn" onclick="startTrial()">✨ Try free — 2 drafts on us</button>
+
+    <div class="divider">or use your own key</div>
+
+    <div class="ai-picker">
+      <div class="ai-option selected" id="optClaude" onclick="selectAI('claude')">
+        <div class="ai-logo">🤖</div>
+        <div class="ai-name">Claude</div>
+        <div class="ai-hint">by Anthropic</div>
+      </div>
+      <div class="ai-option" id="optGemini" onclick="selectAI('gemini')">
+        <div class="ai-logo">✦</div>
+        <div class="ai-name">Gemini</div>
+        <div class="ai-hint">by Google</div>
+      </div>
     </div>
-    <button class="modal-btn" onclick="saveApiKey()">START DRAFTING →</button>
+
+    <input type="password" id="apiKeyInput" placeholder="Paste your API key here…" />
+
+    <div class="modal-note">
+      🤖 <strong>Claude key:</strong> <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys<br>
+      ✦ <strong>Gemini key:</strong> <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> → Get API Key
+    </div>
+
+    <button class="modal-btn outline" onclick="saveApiKey()">USE MY OWN KEY →</button>
+  </div>
+</div>
+
+<!-- Trial Used Up Modal -->
+<div class="modal-overlay hidden" id="trialUpModal">
+  <div class="modal">
+    <div class="trial-up-emoji">🎯</div>
+    <h3 class="center">You've used your 2 free drafts!</h3>
+    <p class="center">Hope you liked it! Add your own API key to keep drafting — it's free to get started.</p>
+
+    <div class="ai-picker">
+      <div class="ai-option selected" id="optClaude2" onclick="selectAI2('claude')">
+        <div class="ai-logo">🤖</div>
+        <div class="ai-name">Claude</div>
+        <div class="ai-hint">by Anthropic</div>
+      </div>
+      <div class="ai-option" id="optGemini2" onclick="selectAI2('gemini')">
+        <div class="ai-logo">✦</div>
+        <div class="ai-name">Gemini</div>
+        <div class="ai-hint">by Google</div>
+      </div>
+    </div>
+
+    <input type="password" id="apiKeyInput2" placeholder="Paste your API key here…" />
+
+    <div class="modal-note">
+      🤖 <strong>Claude key:</strong> <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys<br>
+      ✦ <strong>Gemini key:</strong> <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> → Get API Key
+    </div>
+
+    <button class="modal-btn" onclick="saveApiKey2()">CONTINUE WITH MY KEY →</button>
   </div>
 </div>
 
@@ -484,13 +507,14 @@
 <div class="header">
   <div class="header-icon">✉</div>
   <span class="header-title">AI Email Drafter</span>
-  <span class="header-sub">made by han han</span>
+  <div class="header-right">
+    <span class="trial-badge" id="trialBadge"></span>
+    <span class="header-sub">made by han han</span>
+  </div>
 </div>
 
 <!-- Main -->
 <div class="main">
-
-  <!-- Chat Panel -->
   <div class="chat-panel" id="chatPanel">
     <div class="chat-messages" id="chatMessages">
       <div class="msg ai">
@@ -511,13 +535,11 @@ Try: "Write a follow-up email to a client who hasn't responded in a week"</div>
     </div>
 
     <div class="chat-input-area">
-      <textarea id="userInput" placeholder="Describe the email you need…" rows="2"
-        onkeydown="handleKey(event)"></textarea>
+      <textarea id="userInput" placeholder="Describe the email you need…" rows="2" onkeydown="handleKey(event)"></textarea>
       <button class="send-btn" id="sendBtn" onclick="sendMessage()">SEND →</button>
     </div>
   </div>
 
-  <!-- Email Preview Panel -->
   <div class="email-panel" id="emailPanel">
     <div class="panel-header">
       <span class="panel-title">✉ Draft Preview</span>
@@ -530,42 +552,30 @@ Try: "Write a follow-up email to a client who hasn't responded in a week"</div>
       </div>
     </div>
   </div>
-
 </div>
 
 <!-- Mobile Tab Bar -->
 <div class="tab-bar">
   <button class="tab-btn active" id="tabChat" onclick="switchTab('chat')">
-    <span class="tab-icon">💬</span>
-    CHAT
+    <span class="tab-icon">💬</span>CHAT
   </button>
   <button class="tab-btn" id="tabDraft" onclick="switchTab('draft')">
-    <span class="tab-icon">📝</span>
-    DRAFT
+    <span class="tab-icon">📝</span>DRAFT
   </button>
 </div>
 
 <script>
-  let apiKey = '';
-  let currentEmail = null;
+  // ── PUT YOUR KEYS HERE ──
+  const MY_CLAUDE_KEY = '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';
+  const MY_GEMINI_KEY = 'YAIzaSyDO64YPruQxcu0Ob0-f67a-mPum8NdChkE';
+  const TRIAL_LIMIT = 2;
+  // ────────────────────────
 
-  function switchTab(tab) {
-    const chatPanel = document.getElementById('chatPanel');
-    const emailPanel = document.getElementById('emailPanel');
-    const tabChat = document.getElementById('tabChat');
-    const tabDraft = document.getElementById('tabDraft');
-    if (tab === 'chat') {
-      chatPanel.classList.remove('hidden');
-      emailPanel.classList.add('hidden');
-      tabChat.classList.add('active');
-      tabDraft.classList.remove('active');
-    } else {
-      chatPanel.classList.add('hidden');
-      emailPanel.classList.remove('hidden');
-      tabChat.classList.remove('active');
-      tabDraft.classList.add('active');
-    }
-  }
+  let apiKey = '';
+  let aiProvider = 'claude';
+  let isTrial = false;
+  let trialUsed = parseInt(localStorage.getItem('trialUsed') || '0');
+  let currentEmail = null;
 
   const SYSTEM_PROMPT = `You are an expert email drafting assistant. When a user describes an email they need, draft it professionally.
 Always respond with a JSON object ONLY (no markdown, no extra text) in this exact format:
@@ -576,21 +586,70 @@ Always respond with a JSON object ONLY (no markdown, no extra text) in this exac
   "body": "Full email body with proper greeting, paragraphs, and sign-off. Use \\n for line breaks."
 }`;
 
+  function selectAI(p) {
+    aiProvider = p;
+    document.getElementById('optClaude').classList.toggle('selected', p === 'claude');
+    document.getElementById('optGemini').classList.toggle('selected', p === 'gemini');
+  }
+
+  function selectAI2(p) {
+    aiProvider = p;
+    document.getElementById('optClaude2').classList.toggle('selected', p === 'claude');
+    document.getElementById('optGemini2').classList.toggle('selected', p === 'gemini');
+  }
+
+  function startTrial() {
+    if (trialUsed >= TRIAL_LIMIT) { showTrialUpModal(); return; }
+    isTrial = true;
+    aiProvider = 'claude';
+    apiKey = MY_CLAUDE_KEY;
+    document.getElementById('welcomeModal').classList.add('hidden');
+    updateTrialBadge();
+  }
+
   function saveApiKey() {
     const key = document.getElementById('apiKeyInput').value.trim();
-    if (!key.startsWith('sk-')) {
-      alert('Please enter a valid Anthropic API key (starts with sk-ant-)');
-      return;
-    }
+    if (!key) { alert('Please paste your API key first.'); return; }
+    isTrial = false;
     apiKey = key;
-    document.getElementById('apiModal').style.display = 'none';
+    document.getElementById('welcomeModal').classList.add('hidden');
+    updateTrialBadge();
+  }
+
+  function saveApiKey2() {
+    const key = document.getElementById('apiKeyInput2').value.trim();
+    if (!key) { alert('Please paste your API key first.'); return; }
+    isTrial = false;
+    apiKey = key;
+    document.getElementById('trialUpModal').classList.add('hidden');
+    updateTrialBadge();
+  }
+
+  function updateTrialBadge() {
+    const badge = document.getElementById('trialBadge');
+    const left = TRIAL_LIMIT - trialUsed;
+    if (isTrial && left > 0) {
+      badge.style.display = 'inline';
+      badge.textContent = left === 1 ? '1 trial left' : `${left} trials left`;
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  function showTrialUpModal() {
+    document.getElementById('welcomeModal').classList.add('hidden');
+    document.getElementById('trialUpModal').classList.remove('hidden');
+  }
+
+  function switchTab(tab) {
+    document.getElementById('tabChat').classList.toggle('active', tab === 'chat');
+    document.getElementById('tabDraft').classList.toggle('active', tab === 'draft');
+    document.getElementById('chatPanel').classList.toggle('hidden', tab !== 'chat');
+    document.getElementById('emailPanel').classList.toggle('hidden', tab !== 'draft');
   }
 
   function handleKey(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
   }
 
   function useChip(text) {
@@ -602,61 +661,59 @@ Always respond with a JSON object ONLY (no markdown, no extra text) in this exac
     const container = document.getElementById('chatMessages');
     const div = document.createElement('div');
     div.className = `msg ${role}`;
-    div.innerHTML = `
-      <div class="avatar ${role}">${role === 'ai' ? '✦' : 'U'}</div>
-      <div class="bubble">${text}</div>
-    `;
+    div.innerHTML = `<div class="avatar ${role}">${role === 'ai' ? '✦' : 'U'}</div><div class="bubble">${text}</div>`;
     container.appendChild(div);
     container.scrollTop = container.scrollHeight;
   }
 
   function showTyping() {
-    const container = document.getElementById('chatMessages');
+    const c = document.getElementById('chatMessages');
     const div = document.createElement('div');
-    div.className = 'msg ai';
-    div.id = 'typing';
-    div.innerHTML = `
-      <div class="avatar ai">✦</div>
-      <div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-    `;
-    container.appendChild(div);
-    container.scrollTop = container.scrollHeight;
+    div.className = 'msg ai'; div.id = 'typing';
+    div.innerHTML = `<div class="avatar ai">✦</div><div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+    c.appendChild(div); c.scrollTop = c.scrollHeight;
   }
 
-  function removeTyping() {
-    const t = document.getElementById('typing');
-    if (t) t.remove();
-  }
+  function removeTyping() { const t = document.getElementById('typing'); if (t) t.remove(); }
 
   function renderEmail(data) {
     currentEmail = data;
     document.getElementById('copyBtn').disabled = false;
-    const content = document.getElementById('emailContent');
-    content.innerHTML = `
+    document.getElementById('emailContent').innerHTML = `
       <div>
-        ${data.to ? `
-        <div class="email-field">
-          <span class="field-label">To</span>
-          <span class="field-val">${data.to}</span>
-        </div>` : ''}
-        <div class="email-field">
-          <span class="field-label">Subject</span>
-          <span class="field-val field-subject">${data.subject}</span>
-        </div>
+        ${data.to ? `<div class="email-field"><span class="field-label">To</span><span class="field-val">${data.to}</span></div>` : ''}
+        <div class="email-field"><span class="field-label">Subject</span><span class="field-val field-subject">${data.subject}</span></div>
         <div class="email-body">${data.body}</div>
-      </div>
-    `;
-    // Auto switch to draft tab on mobile
+      </div>`;
     if (window.innerWidth <= 640) switchTab('draft');
   }
 
   function copyEmail() {
     if (!currentEmail) return;
-    const text = `To: ${currentEmail.to || '[Recipient]'}\nSubject: ${currentEmail.subject}\n\n${currentEmail.body}`;
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(`To: ${currentEmail.to || '[Recipient]'}\nSubject: ${currentEmail.subject}\n\n${currentEmail.body}`);
     const btn = document.getElementById('copyBtn');
     btn.textContent = '✓ COPIED';
     setTimeout(() => btn.textContent = 'COPY ALL', 2000);
+  }
+
+  async function callClaude(msg) {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system: SYSTEM_PROMPT, messages: [{ role: 'user', content: msg }] })
+    });
+    const data = await res.json();
+    return data.content?.[0]?.text || '{}';
+  }
+
+  async function callGemini(msg) {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contents: [{ parts: [{ text: `${SYSTEM_PROMPT}\n\nUser request: ${msg}` }] }] })
+    });
+    const data = await res.json();
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
   }
 
   async function sendMessage(text) {
@@ -665,39 +722,31 @@ Always respond with a JSON object ONLY (no markdown, no extra text) in this exac
     const msg = (text || input.value).trim();
     if (!msg) return;
 
+    if (isTrial && trialUsed >= TRIAL_LIMIT) { showTrialUpModal(); return; }
+
     input.value = '';
     sendBtn.disabled = true;
     addMessage('user', msg);
     showTyping();
 
     try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01'
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          system: SYSTEM_PROMPT,
-          messages: [{ role: 'user', content: msg }]
-        })
-      });
-
-      const data = await res.json();
-      const raw = data.content?.[0]?.text || '{}';
+      const raw = aiProvider === 'gemini' ? await callGemini(msg) : await callClaude(msg);
       let parsed;
-      try {
-        parsed = JSON.parse(raw.replace(/```json|```/g, '').trim());
-      } catch {
-        parsed = { reply: raw, subject: 'Draft Email', body: raw, to: '' };
-      }
+      try { parsed = JSON.parse(raw.replace(/```json|```/g, '').trim()); }
+      catch { parsed = { reply: raw, subject: 'Draft Email', body: raw, to: '' }; }
 
       removeTyping();
       addMessage('ai', parsed.reply || 'Here is your drafted email!');
       renderEmail(parsed);
+
+      if (isTrial) {
+        trialUsed++;
+        localStorage.setItem('trialUsed', trialUsed);
+        updateTrialBadge();
+        if (trialUsed >= TRIAL_LIMIT) {
+          setTimeout(() => addMessage('ai', "You've used all 2 free drafts! 🎯 To keep going, refresh the page and add your own API key."), 1000);
+        }
+      }
     } catch {
       removeTyping();
       addMessage('ai', 'Something went wrong. Check your API key and try again.');
