@@ -1,23 +1,20 @@
 # ✉️ AI Email Drafter
 
-An AI-powered email drafting app built with React and Claude. Just describe the email you need in plain language and get a polished draft instantly.
+An AI-powered email drafting app built by Han Han. Just describe the email you need in plain language and get a polished draft instantly.
 
 **Made by han han**
 
 ---
 
-## ✨ Features
+## Features
 
-- 💬 **Chat to draft** — describe your email conversationally and AI writes it for you
-- 📋 **Quick-start chips** — one-click starters for common email types (follow-up, apology, job application, etc.)
-- 👀 **Live preview panel** — see your drafted email with To, Subject, and Body fields
-- 📋 **Copy with one click** — grab the full draft instantly
-- 🔁 **Iterate naturally** — just say "make it shorter" or "more formal" to refine
+- **Chat to draft** — describe your email conversationally and AI writes it for you
+- **Quick-start chips** — one-click starters for common email types (follow-up, apology, job application, etc.)
+- **Live preview panel** — see your drafted email with To, Subject, and Body fields
+- **Copy with one click** — grab the full draft instantly
+- **Iterate naturally** — just say "make it shorter" or "more formal" to refine
 
-## 🚀 Getting Started
-
-### Run on Claude.ai
-No setup needed — open the `.jsx` file as an artifact in Claude.ai and it works out of the box.
+## Getting Started
 
 ### Run Locally
 
@@ -49,13 +46,13 @@ No setup needed — open the `.jsx` file as an artifact in Claude.ai and it work
    npm run dev
    ```
 
-## 🛠 Tech Stack
+## Tech Stack
 
 - **React** — UI framework
 - **Claude API (claude-sonnet-4)** — AI email generation
 - **Vanilla CSS-in-JS** — styling
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 ai-email-drafter/
@@ -63,13 +60,13 @@ ai-email-drafter/
 └── README.md              # You're here
 ```
 
-## 💡 Example Prompts
+## Example Prompts
 
 - *"Write a follow-up email to a client who hasn't responded in a week"*
 - *"Apologize to my boss for missing a meeting, keep it professional but warm"*
 - *"Write a cold outreach email to a potential collaborator"*
 - *"Decline a job offer politely"*
 
-## 📄 License
+## License
 
 MIT — free to use and modify.
