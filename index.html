@@ -65,13 +65,6 @@
     .modal { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 28px; width: 440px; display: flex; flex-direction: column; gap: 14px; }
     .modal h3 { font-family: Georgia, serif; font-size: 20px; }
     .modal p { font-size: 13px; color: var(--muted); line-height: 1.6; }
-    .ai-picker { display: flex; gap: 10px; }
-    .ai-option { flex: 1; border: 2px solid var(--border); border-radius: 8px; padding: 14px 10px; cursor: pointer; text-align: center; transition: all 0.2s; background: var(--paper); }
-    .ai-option:hover { border-color: var(--accent2); }
-    .ai-option.selected { border-color: var(--accent); background: var(--cream); }
-    .ai-option .ai-logo { font-size: 24px; margin-bottom: 5px; }
-    .ai-option .ai-name { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; }
-    .ai-option .ai-hint { font-size: 10px; color: var(--muted); margin-top: 2px; }
     .modal input { border: 1px solid var(--border); background: var(--paper); padding: 11px 12px; font-family: 'DM Mono', monospace; font-size: 12px; border-radius: 6px; outline: none; width: 100%; }
     .modal input:focus { border-color: var(--accent2); }
     .modal-btn { background: var(--accent); color: white; border: none; border-radius: 6px; padding: 12px; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; cursor: pointer; letter-spacing: 0.05em; transition: background 0.2s; }
@@ -113,37 +106,36 @@
 </head>
 <body>
 
+<!-- Welcome Modal -->
 <div class="modal-overlay" id="welcomeModal">
   <div class="modal">
     <h3>✉ AI Email Drafter</h3>
-    <p>Draft polished emails instantly using AI. Try 2 free drafts on us, or use your own API key for unlimited access.</p>
+    <p>Draft polished emails instantly using Gemini AI. Try 2 free drafts on us, or use your own Gemini API key for unlimited access.</p>
     <button class="modal-btn" onclick="startTrial()">✨ Try free — 2 drafts on us</button>
     <div class="divider">or use your own key</div>
-    <div class="ai-picker">
-      <div class="ai-option selected" id="optClaude" onclick="selectAI('claude')"><div class="ai-logo">🤖</div><div class="ai-name">Claude</div><div class="ai-hint">by Anthropic</div></div>
-      <div class="ai-option" id="optGemini" onclick="selectAI('gemini')"><div class="ai-logo">✦</div><div class="ai-name">Gemini</div><div class="ai-hint">by Google</div></div>
+    <input type="password" id="apiKeyInput" placeholder="Paste your Gemini API key here…" />
+    <div class="modal-note">
+      Get your free key at <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> → Get API Key
     </div>
-    <input type="password" id="apiKeyInput" placeholder="Paste your API key here…" />
-    <div class="modal-note">🤖 <strong>Claude key:</strong> <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys<br>✦ <strong>Gemini key:</strong> <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> → Get API Key</div>
     <button class="modal-btn outline" onclick="saveApiKey()">USE MY OWN KEY →</button>
   </div>
 </div>
 
+<!-- Trial Used Up Modal -->
 <div class="modal-overlay hidden" id="trialUpModal">
   <div class="modal">
     <div class="trial-up-emoji">🎯</div>
     <h3 class="center">You've used your 2 free drafts!</h3>
-    <p class="center">Hope you liked it! Add your own API key to keep drafting — it's free to get started.</p>
-    <div class="ai-picker">
-      <div class="ai-option selected" id="optClaude2" onclick="selectAI2('claude')"><div class="ai-logo">🤖</div><div class="ai-name">Claude</div><div class="ai-hint">by Anthropic</div></div>
-      <div class="ai-option" id="optGemini2" onclick="selectAI2('gemini')"><div class="ai-logo">✦</div><div class="ai-name">Gemini</div><div class="ai-hint">by Google</div></div>
+    <p class="center">Hope you liked it! Get a free Gemini API key to keep drafting — takes 2 minutes.</p>
+    <input type="password" id="apiKeyInput2" placeholder="Paste your Gemini API key here…" />
+    <div class="modal-note">
+      Get your free key at <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> → Get API Key
     </div>
-    <input type="password" id="apiKeyInput2" placeholder="Paste your API key here…" />
-    <div class="modal-note">🤖 <strong>Claude key:</strong> <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys<br>✦ <strong>Gemini key:</strong> <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> → Get API Key</div>
     <button class="modal-btn" onclick="saveApiKey2()">CONTINUE WITH MY KEY →</button>
   </div>
 </div>
 
+<!-- Header -->
 <div class="header">
   <div class="header-icon">✉</div>
   <span class="header-title">AI Email Drafter</span>
@@ -153,6 +145,7 @@
   </div>
 </div>
 
+<!-- Main -->
 <div class="main">
   <div class="chat-panel" id="chatPanel">
     <div class="chat-messages" id="chatMessages">
@@ -191,85 +184,169 @@ Try: "Write a follow-up email to a client who hasn't responded in a week"</div>
   </div>
 </div>
 
+<!-- Mobile Tab Bar -->
 <div class="tab-bar">
   <button class="tab-btn active" id="tabChat" onclick="switchTab('chat')"><span class="tab-icon">💬</span>CHAT</button>
   <button class="tab-btn" id="tabDraft" onclick="switchTab('draft')"><span class="tab-icon">📝</span>DRAFT</button>
 </div>
 
 <script>
-  const MY_CLAUDE_KEY = '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';
+  // ── YOUR GEMINI KEY FOR FREE TRIAL ──
   const MY_GEMINI_KEY = 'AIzaSyDvkuDbD3tSILjW72pzgOnQRz_KSra2yPc';
   const TRIAL_LIMIT = 2;
+  // ────────────────────────────────────
 
-  let apiKey = '', aiProvider = 'claude', isTrial = false, currentEmail = null;
+  let apiKey = '';
+  let isTrial = false;
   let trialUsed = parseInt(localStorage.getItem('trialUsed') || '0');
+  let currentEmail = null;
 
-  const SYSTEM_PROMPT = `You are an expert email drafting assistant. When a user describes an email they need, draft it professionally. Always respond with a JSON object ONLY (no markdown, no extra text) in this exact format: {"reply":"...","to":"...","subject":"...","body":"..."}`;
+  function startTrial() {
+    if (trialUsed >= TRIAL_LIMIT) { showTrialUpModal(); return; }
+    isTrial = true;
+    apiKey = MY_GEMINI_KEY;
+    document.getElementById('welcomeModal').classList.add('hidden');
+    updateTrialBadge();
+  }
 
-  function selectAI(p) { aiProvider=p; document.getElementById('optClaude').classList.toggle('selected',p==='claude'); document.getElementById('optGemini').classList.toggle('selected',p==='gemini'); }
-  function selectAI2(p) { aiProvider=p; document.getElementById('optClaude2').classList.toggle('selected',p==='claude'); document.getElementById('optGemini2').classList.toggle('selected',p==='gemini'); }
-  function startTrial() { if(trialUsed>=TRIAL_LIMIT){showTrialUpModal();return;} isTrial=true; aiProvider='gemini'; apiKey=MY_GEMINI_KEY; document.getElementById('welcomeModal').classList.add('hidden'); updateTrialBadge(); }
-  function saveApiKey() { const k=document.getElementById('apiKeyInput').value.trim(); if(!k){alert('Please paste your API key first.');return;} isTrial=false; apiKey=k; document.getElementById('welcomeModal').classList.add('hidden'); updateTrialBadge(); }
-  function saveApiKey2() { const k=document.getElementById('apiKeyInput2').value.trim(); if(!k){alert('Please paste your API key first.');return;} isTrial=false; apiKey=k; document.getElementById('trialUpModal').classList.add('hidden'); updateTrialBadge(); }
-  function updateTrialBadge() { const b=document.getElementById('trialBadge'),left=TRIAL_LIMIT-trialUsed; if(isTrial&&left>0){b.style.display='inline';b.textContent=left===1?'1 trial left':`${left} trials left`;}else{b.style.display='none';} }
-  function showTrialUpModal() { document.getElementById('welcomeModal').classList.add('hidden'); document.getElementById('trialUpModal').classList.remove('hidden'); }
-  function switchTab(tab) { document.getElementById('tabChat').classList.toggle('active',tab==='chat'); document.getElementById('tabDraft').classList.toggle('active',tab==='draft'); document.getElementById('chatPanel').classList.toggle('hidden',tab!=='chat'); document.getElementById('emailPanel').classList.toggle('hidden',tab!=='draft'); }
-  function handleKey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();} }
+  function saveApiKey() {
+    const k = document.getElementById('apiKeyInput').value.trim();
+    if (!k) { alert('Please paste your Gemini API key first.'); return; }
+    isTrial = false;
+    apiKey = k;
+    document.getElementById('welcomeModal').classList.add('hidden');
+    updateTrialBadge();
+  }
+
+  function saveApiKey2() {
+    const k = document.getElementById('apiKeyInput2').value.trim();
+    if (!k) { alert('Please paste your Gemini API key first.'); return; }
+    isTrial = false;
+    apiKey = k;
+    document.getElementById('trialUpModal').classList.add('hidden');
+    updateTrialBadge();
+  }
+
+  function updateTrialBadge() {
+    const b = document.getElementById('trialBadge'), left = TRIAL_LIMIT - trialUsed;
+    if (isTrial && left > 0) { b.style.display='inline'; b.textContent = left===1 ? '1 trial left' : `${left} trials left`; }
+    else { b.style.display='none'; }
+  }
+
+  function showTrialUpModal() {
+    document.getElementById('welcomeModal').classList.add('hidden');
+    document.getElementById('trialUpModal').classList.remove('hidden');
+  }
+
+  function switchTab(tab) {
+    document.getElementById('tabChat').classList.toggle('active', tab==='chat');
+    document.getElementById('tabDraft').classList.toggle('active', tab==='draft');
+    document.getElementById('chatPanel').classList.toggle('hidden', tab!=='chat');
+    document.getElementById('emailPanel').classList.toggle('hidden', tab!=='draft');
+  }
+
+  function handleKey(e) { if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }
   function useChip(text) { document.getElementById('userInput').value=text; sendMessage(); }
-  function addMessage(role,text) { const c=document.getElementById('chatMessages'),d=document.createElement('div'); d.className=`msg ${role}`; d.innerHTML=`<div class="avatar ${role}">${role==='ai'?'✦':'U'}</div><div class="bubble">${text}</div>`; c.appendChild(d); c.scrollTop=c.scrollHeight; }
-  function showTyping() { const c=document.getElementById('chatMessages'),d=document.createElement('div'); d.className='msg ai'; d.id='typing'; d.innerHTML=`<div class="avatar ai">✦</div><div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`; c.appendChild(d); c.scrollTop=c.scrollHeight; }
-  function removeTyping() { const t=document.getElementById('typing'); if(t)t.remove(); }
-  function renderEmail(data) { currentEmail=data; document.getElementById('copyBtn').disabled=false; document.getElementById('emailContent').innerHTML=`<div>${data.to?`<div class="email-field"><span class="field-label">To</span><span class="field-val">${data.to}</span></div>`:''}<div class="email-field"><span class="field-label">Subject</span><span class="field-val field-subject">${data.subject}</span></div><div class="email-body">${data.body}</div></div>`; if(window.innerWidth<=640)switchTab('draft'); }
-  function copyEmail() { if(!currentEmail)return; navigator.clipboard.writeText(`To: ${currentEmail.to||'[Recipient]'}\nSubject: ${currentEmail.subject}\n\n${currentEmail.body}`); const b=document.getElementById('copyBtn'); b.textContent='✓ COPIED'; setTimeout(()=>b.textContent='COPY ALL',2000); }
 
-  async function callClaude(msg) {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system: SYSTEM_PROMPT, messages: [{role:'user',content:msg}] })
-    });
-    const data = await res.json();
-    return data.content?.[0]?.text || '{}';
+  function addMessage(role, text) {
+    const c = document.getElementById('chatMessages'), d = document.createElement('div');
+    d.className = `msg ${role}`;
+    d.innerHTML = `<div class="avatar ${role}">${role==='ai'?'✦':'U'}</div><div class="bubble">${text}</div>`;
+    c.appendChild(d); c.scrollTop = c.scrollHeight;
+  }
+
+  function showTyping() {
+    const c = document.getElementById('chatMessages'), d = document.createElement('div');
+    d.className = 'msg ai'; d.id = 'typing';
+    d.innerHTML = `<div class="avatar ai">✦</div><div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+    c.appendChild(d); c.scrollTop = c.scrollHeight;
+  }
+
+  function removeTyping() { const t = document.getElementById('typing'); if (t) t.remove(); }
+
+  function renderEmail(data) {
+    currentEmail = data;
+    document.getElementById('copyBtn').disabled = false;
+    document.getElementById('emailContent').innerHTML = `
+      <div>
+        ${data.to ? `<div class="email-field"><span class="field-label">To</span><span class="field-val">${data.to}</span></div>` : ''}
+        <div class="email-field"><span class="field-label">Subject</span><span class="field-val field-subject">${data.subject}</span></div>
+        <div class="email-body">${data.body}</div>
+      </div>`;
+    if (window.innerWidth <= 640) switchTab('draft');
+  }
+
+  function copyEmail() {
+    if (!currentEmail) return;
+    navigator.clipboard.writeText(`To: ${currentEmail.to||'[Recipient]'}\nSubject: ${currentEmail.subject}\n\n${currentEmail.body}`);
+    const b = document.getElementById('copyBtn');
+    b.textContent = '✓ COPIED';
+    setTimeout(() => b.textContent = 'COPY ALL', 2000);
   }
 
   async function callGemini(msg) {
-    const prompt = `You are an expert email drafting assistant. Respond with ONLY a raw JSON object — no markdown, no backticks, no extra text. The JSON must have exactly these fields: {"reply":"A brief friendly message","to":"Recipient or empty string","subject":"Email subject","body":"Full email body. Use \\n for line breaks."} User request: ${msg}`;
-    const models = ['gemini-2.0-flash','gemini-2.0-flash-lite','gemini-1.5-flash','gemini-1.5-flash-8b','gemini-1.5-pro'];
+    const prompt = `You are an expert email drafting assistant. Respond with ONLY a raw JSON object — no markdown, no backticks, no extra text before or after.
+
+The JSON must have exactly these 4 fields:
+{
+  "reply": "A brief friendly message acknowledging what you drafted",
+  "to": "Suggested recipient e.g. Hiring Manager, or empty string",
+  "subject": "Email subject line",
+  "body": "Full email body with greeting and sign-off. Use \\n for line breaks."
+}
+
+User request: ${msg}`;
+
+    const models = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-8b'];
     for (const model of models) {
       try {
-        console.log('Trying model:', model);
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents: [{parts:[{text:prompt}]}], generationConfig: {temperature:0.7, responseMimeType:'application/json'} })
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { temperature: 0.7, responseMimeType: 'application/json' }
+          })
         });
         const data = await res.json();
-        console.log(`${model}:`, data);
         const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (text) return text.replace(/```json|```/g,'').trim();
+        if (text) return text.replace(/```json|```/g, '').trim();
       } catch(e) { console.warn(`${model} failed:`, e); }
     }
-    throw new Error('All Gemini models failed');
+    throw new Error('All models failed');
   }
 
   async function sendMessage(text) {
-    const input=document.getElementById('userInput'), sendBtn=document.getElementById('sendBtn');
-    const msg=(text||input.value).trim();
-    if(!msg)return;
-    if(isTrial&&trialUsed>=TRIAL_LIMIT){showTrialUpModal();return;}
-    input.value=''; sendBtn.disabled=true;
-    addMessage('user',msg); showTyping();
+    const input = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const msg = (text || input.value).trim();
+    if (!msg) return;
+    if (isTrial && trialUsed >= TRIAL_LIMIT) { showTrialUpModal(); return; }
+
+    input.value = ''; sendBtn.disabled = true;
+    addMessage('user', msg); showTyping();
+
     try {
-      const raw = aiProvider==='gemini' ? await callGemini(msg) : await callClaude(msg);
+      const raw = await callGemini(msg);
       let parsed;
-      try { parsed=JSON.parse(raw.replace(/```json|```/g,'').trim()); }
-      catch { parsed={reply:raw,subject:'Draft Email',body:raw,to:''}; }
+      try { parsed = JSON.parse(raw); }
+      catch { parsed = { reply: 'Here is your drafted email!', subject: 'Draft Email', body: raw, to: '' }; }
       removeTyping();
-      addMessage('ai', parsed.reply||'Here is your drafted email!');
+      addMessage('ai', parsed.reply || 'Here is your drafted email!');
       renderEmail(parsed);
-      if(isTrial){trialUsed++;localStorage.setItem('trialUsed',trialUsed);updateTrialBadge();if(trialUsed>=TRIAL_LIMIT)setTimeout(()=>addMessage('ai',"You've used all 2 free drafts! 🎯 Refresh and add your own API key to continue."),1000);}
-    } catch { removeTyping(); addMessage('ai','Something went wrong. Check your API key and try again.'); }
-    sendBtn.disabled=false;
+      if (isTrial) {
+        trialUsed++;
+        localStorage.setItem('trialUsed', trialUsed);
+        updateTrialBadge();
+        if (trialUsed >= TRIAL_LIMIT) {
+          setTimeout(() => addMessage('ai', "You've used all 2 free drafts! 🎯 Refresh and add your own free Gemini key to continue."), 1000);
+        }
+      }
+    } catch {
+      removeTyping();
+      addMessage('ai', 'Something went wrong. Check your API key and try again.');
+    }
+    sendBtn.disabled = false;
   }
 </script>
 </body>
