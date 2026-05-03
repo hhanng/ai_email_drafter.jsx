@@ -110,14 +110,12 @@
 <div class="modal-overlay" id="welcomeModal">
   <div class="modal">
     <h3>✉ AI Email Drafter</h3>
-    <p>Draft polished emails instantly using Gemini AI. Try 2 free drafts on us, or use your own Gemini API key for unlimited access.</p>
-    <button class="modal-btn" onclick="startTrial()">✨ Try free — 2 drafts on us</button>
-    <div class="divider">or use your own key</div>
+    <p>Draft polished emails instantly using Gemini AI. Paste your free Gemini API key to get started.</p>
     <input type="password" id="apiKeyInput" placeholder="Paste your Gemini API key here…" />
     <div class="modal-note">
-      Get your free key at <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> → Get API Key
+      Get your <strong>free</strong> key at <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> → Get API Key
     </div>
-    <button class="modal-btn outline" onclick="saveApiKey()">USE MY OWN KEY →</button>
+    <button class="modal-btn" onclick="saveApiKey()">START DRAFTING →</button>
   </div>
 </div>
 
@@ -192,8 +190,8 @@ Try: "Write a follow-up email to a client who hasn't responded in a week"</div>
 
 <script>
   // ── YOUR GEMINI KEY FOR FREE TRIAL ──
-  const MY_GEMINI_KEY = 'AIzaSyDXr3c6HoL33yfVNF1tufgnS4DWceC0LCA';
-  const TRIAL_LIMIT = 2;
+  const MY_GEMINI_KEY = '';
+  const TRIAL_LIMIT = 0;
   // ────────────────────────────────────
 
   let apiKey = '';
