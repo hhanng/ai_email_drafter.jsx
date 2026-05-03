@@ -6,424 +6,99 @@
   <title>AI Email Drafter</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap');
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     :root {
-      --ink: #1a1a2e;
-      --paper: #f5f0e8;
-      --cream: #ede8dc;
-      --accent: #c4492a;
-      --accent2: #2a6b8a;
-      --muted: #8a8070;
-      --border: #d4cec0;
-      --white: #fdfaf5;
+      --ink: #1a1a2e; --paper: #f5f0e8; --cream: #ede8dc;
+      --accent: #c4492a; --accent2: #2a6b8a; --muted: #8a8070;
+      --border: #d4cec0; --white: #fdfaf5;
     }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--paper);
-      color: var(--ink);
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .header {
-      background: var(--ink);
-      color: var(--paper);
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      border-bottom: 3px solid var(--accent);
-      flex-shrink: 0;
-    }
-    .header-icon {
-      width: 36px; height: 36px;
-      background: var(--accent);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px;
-    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+    .header { background: var(--ink); color: var(--paper); padding: 14px 24px; display: flex; align-items: center; gap: 12px; border-bottom: 3px solid var(--accent); flex-shrink: 0; }
+    .header-icon { width: 36px; height: 36px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; }
     .header-title { font-family: Georgia, serif; font-size: 20px; font-weight: 700; }
     .header-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
     .header-sub { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); opacity: 0.7; }
-
-    .trial-badge {
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      background: var(--accent);
-      color: white;
-      padding: 3px 9px;
-      border-radius: 20px;
-      letter-spacing: 0.05em;
-      display: none;
-    }
-
+    .trial-badge { font-family: 'DM Mono', monospace; font-size: 10px; background: var(--accent); color: white; padding: 3px 9px; border-radius: 20px; letter-spacing: 0.05em; display: none; }
     .main { display: flex; flex: 1; overflow: hidden; }
-
-    .chat-panel {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      border-right: 1px solid var(--border);
-      background: #f9f5ee;
-      min-width: 0;
-    }
-
-    .chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      scrollbar-width: thin;
-    }
-
+    .chat-panel { flex: 1; display: flex; flex-direction: column; border-right: 1px solid var(--border); background: #f9f5ee; min-width: 0; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 20px 16px; display: flex; flex-direction: column; gap: 14px; scrollbar-width: thin; }
     .msg { display: flex; gap: 10px; animation: fadeUp 0.3s ease; }
     .msg.user { flex-direction: row-reverse; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .avatar {
-      width: 30px; height: 30px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 13px;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; margin-top: 2px; }
     .avatar.ai { background: var(--ink); color: var(--paper); }
     .avatar.user { background: var(--accent); color: white; }
-
-    .bubble {
-      max-width: 78%;
-      padding: 10px 14px;
-      font-size: 13.5px;
-      line-height: 1.6;
-      white-space: pre-wrap;
-    }
-    .msg.ai .bubble {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent2);
-      border-radius: 0 8px 8px 8px;
-    }
-    .msg.user .bubble {
-      background: var(--ink);
-      color: var(--paper);
-      border-radius: 8px 0 8px 8px;
-      font-family: 'DM Mono', monospace;
-      font-size: 12.5px;
-    }
-
-    .typing {
-      display: flex; gap: 4px;
-      padding: 14px;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent2);
-      border-radius: 0 8px 8px 8px;
-      width: fit-content;
-    }
-    .dot {
-      width: 6px; height: 6px;
-      background: var(--muted);
-      border-radius: 50%;
-      animation: bounce 1.2s infinite;
-    }
+    .bubble { max-width: 78%; padding: 10px 14px; font-size: 13.5px; line-height: 1.6; white-space: pre-wrap; }
+    .msg.ai .bubble { background: var(--white); border: 1px solid var(--border); border-left: 3px solid var(--accent2); border-radius: 0 8px 8px 8px; }
+    .msg.user .bubble { background: var(--ink); color: var(--paper); border-radius: 8px 0 8px 8px; font-family: 'DM Mono', monospace; font-size: 12.5px; }
+    .typing { display: flex; gap: 4px; padding: 14px; background: var(--white); border: 1px solid var(--border); border-left: 3px solid var(--accent2); border-radius: 0 8px 8px 8px; width: fit-content; }
+    .dot { width: 6px; height: 6px; background: var(--muted); border-radius: 50%; animation: bounce 1.2s infinite; }
     .dot:nth-child(2) { animation-delay: 0.2s; }
     .dot:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes bounce {
-      0%, 60%, 100% { transform: translateY(0); }
-      30% { transform: translateY(-5px); }
-    }
-
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      padding: 10px 16px;
-      border-top: 1px solid var(--border);
-      background: var(--cream);
-    }
-    .chip {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 5px 12px;
-      font-size: 11.5px;
-      font-family: 'DM Mono', monospace;
-      color: var(--muted);
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.2s;
-    }
+    @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
+    .chips { display: flex; flex-wrap: wrap; gap: 7px; padding: 10px 16px; border-top: 1px solid var(--border); background: var(--cream); }
+    .chip { background: var(--white); border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px; font-size: 11.5px; font-family: 'DM Mono', monospace; color: var(--muted); cursor: pointer; white-space: nowrap; transition: all 0.2s; }
     .chip:hover { border-color: var(--accent); color: var(--accent); }
-
-    .chat-input-area {
-      padding: 14px 16px;
-      border-top: 1px solid var(--border);
-      background: var(--white);
-      display: flex;
-      gap: 10px;
-      align-items: flex-end;
-    }
-    textarea {
-      flex: 1;
-      border: 1px solid var(--border);
-      background: var(--paper);
-      padding: 10px 12px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13.5px;
-      color: var(--ink);
-      resize: none;
-      border-radius: 4px;
-      outline: none;
-      max-height: 100px;
-      line-height: 1.5;
-    }
+    .chat-input-area { padding: 14px 16px; border-top: 1px solid var(--border); background: var(--white); display: flex; gap: 10px; align-items: flex-end; }
+    textarea { flex: 1; border: 1px solid var(--border); background: var(--paper); padding: 10px 12px; font-family: 'DM Sans', sans-serif; font-size: 13.5px; color: var(--ink); resize: none; border-radius: 4px; outline: none; max-height: 100px; line-height: 1.5; }
     textarea:focus { border-color: var(--accent2); }
-
-    .send-btn {
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 4px;
-      padding: 10px 18px;
-      font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-      letter-spacing: 0.05em;
-      flex-shrink: 0;
-      transition: background 0.2s;
-    }
+    .send-btn { background: var(--accent); color: white; border: none; border-radius: 4px; padding: 10px 18px; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; cursor: pointer; letter-spacing: 0.05em; flex-shrink: 0; transition: background 0.2s; }
     .send-btn:hover { background: #a33920; }
     .send-btn:disabled { background: var(--muted); cursor: not-allowed; }
-
-    .email-panel {
-      width: 400px;
-      display: flex;
-      flex-direction: column;
-      background: var(--white);
-      flex-shrink: 0;
-    }
-    .panel-header {
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--cream);
-    }
-    .panel-title {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .copy-btn {
-      background: none;
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      padding: 4px 10px;
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      color: var(--muted);
-      cursor: pointer;
-      letter-spacing: 0.05em;
-      transition: all 0.2s;
-    }
+    .email-panel { width: 400px; display: flex; flex-direction: column; background: var(--white); flex-shrink: 0; }
+    .panel-header { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--cream); }
+    .panel-title { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    .copy-btn { background: none; border: 1px solid var(--border); border-radius: 3px; padding: 4px 10px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); cursor: pointer; letter-spacing: 0.05em; transition: all 0.2s; }
     .copy-btn:hover { border-color: var(--accent2); color: var(--accent2); }
     .copy-btn:disabled { cursor: not-allowed; opacity: 0.5; }
-
     .email-content { flex: 1; overflow-y: auto; padding: 20px; }
-
-    .email-placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      gap: 12px;
-      color: var(--muted);
-      text-align: center;
-    }
+    .email-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 12px; color: var(--muted); text-align: center; }
     .email-placeholder .icon { font-size: 40px; opacity: 0.4; }
-    .email-placeholder p {
-      font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      line-height: 1.7;
-      max-width: 240px;
-    }
-
+    .email-placeholder p { font-family: 'DM Mono', monospace; font-size: 12px; line-height: 1.7; max-width: 240px; }
     .email-field { padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px; }
-    .field-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--muted);
-      width: 55px;
-      flex-shrink: 0;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding-top: 1px;
-    }
+    .field-label { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; color: var(--muted); width: 55px; flex-shrink: 0; text-transform: uppercase; letter-spacing: 0.05em; padding-top: 1px; }
     .field-val { font-size: 13px; font-weight: 500; line-height: 1.5; }
     .field-subject { font-family: Georgia, serif; font-size: 15px; font-weight: 700; }
     .email-body { padding: 18px 0; white-space: pre-wrap; line-height: 1.75; font-size: 13.5px; }
-
-    /* Modals */
-    .modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.65);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 100;
-    }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); display: flex; align-items: center; justify-content: center; z-index: 100; }
     .modal-overlay.hidden { display: none; }
-
-    .modal {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 28px;
-      width: 440px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
+    .modal { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 28px; width: 440px; display: flex; flex-direction: column; gap: 14px; }
     .modal h3 { font-family: Georgia, serif; font-size: 20px; }
     .modal p { font-size: 13px; color: var(--muted); line-height: 1.6; }
-
     .ai-picker { display: flex; gap: 10px; }
-    .ai-option {
-      flex: 1;
-      border: 2px solid var(--border);
-      border-radius: 8px;
-      padding: 14px 10px;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.2s;
-      background: var(--paper);
-    }
+    .ai-option { flex: 1; border: 2px solid var(--border); border-radius: 8px; padding: 14px 10px; cursor: pointer; text-align: center; transition: all 0.2s; background: var(--paper); }
     .ai-option:hover { border-color: var(--accent2); }
     .ai-option.selected { border-color: var(--accent); background: var(--cream); }
     .ai-option .ai-logo { font-size: 24px; margin-bottom: 5px; }
     .ai-option .ai-name { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; }
     .ai-option .ai-hint { font-size: 10px; color: var(--muted); margin-top: 2px; }
-
-    .modal input {
-      border: 1px solid var(--border);
-      background: var(--paper);
-      padding: 11px 12px;
-      font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      border-radius: 6px;
-      outline: none;
-      width: 100%;
-    }
+    .modal input { border: 1px solid var(--border); background: var(--paper); padding: 11px 12px; font-family: 'DM Mono', monospace; font-size: 12px; border-radius: 6px; outline: none; width: 100%; }
     .modal input:focus { border-color: var(--accent2); }
-
-    .modal-btn {
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      padding: 12px;
-      font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-      letter-spacing: 0.05em;
-      transition: background 0.2s;
-    }
+    .modal-btn { background: var(--accent); color: white; border: none; border-radius: 6px; padding: 12px; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; cursor: pointer; letter-spacing: 0.05em; transition: background 0.2s; }
     .modal-btn:hover { background: #a33920; }
-    .modal-btn.outline {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--muted);
-    }
+    .modal-btn.outline { background: none; border: 1px solid var(--border); color: var(--muted); }
     .modal-btn.outline:hover { border-color: var(--accent2); color: var(--accent2); background: none; }
-
-    .modal-note {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      color: var(--muted);
-      background: var(--cream);
-      padding: 10px 12px;
-      border-radius: 6px;
-      line-height: 1.8;
-    }
+    .modal-note { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); background: var(--cream); padding: 10px 12px; border-radius: 6px; line-height: 1.8; }
     .modal-note a { color: var(--accent2); text-decoration: none; }
-
-    .divider {
-      display: flex; align-items: center; gap: 10px;
-      color: var(--muted); font-size: 11px; font-family: 'DM Mono', monospace;
-    }
+    .divider { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 11px; font-family: 'DM Mono', monospace; }
     .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
     .trial-up-emoji { font-size: 38px; text-align: center; }
     .center { text-align: center; }
-
-    /* Tab bar hidden on desktop */
     .tab-bar { display: none; }
-
     @media (max-width: 640px) {
       body { height: 100dvh; }
       .header { padding: 12px 16px; }
       .header-title { font-size: 17px; }
       .header-sub { display: none; }
       .main { flex-direction: column; position: relative; overflow: hidden; }
-
-      .chat-panel {
-        position: absolute; inset: 0; border-right: none;
-        transition: transform 0.3s ease, opacity 0.3s ease;
-      }
+      .chat-panel { position: absolute; inset: 0; border-right: none; transition: transform 0.3s ease, opacity 0.3s ease; }
       .chat-panel.hidden { transform: translateX(-100%); opacity: 0; pointer-events: none; }
-
-      .email-panel {
-        position: absolute; inset: 0; width: 100%;
-        transition: transform 0.3s ease, opacity 0.3s ease;
-      }
+      .email-panel { position: absolute; inset: 0; width: 100%; transition: transform 0.3s ease, opacity 0.3s ease; }
       .email-panel.hidden { transform: translateX(100%); opacity: 0; pointer-events: none; }
-
-      .tab-bar {
-        display: flex;
-        border-top: 1px solid var(--border);
-        background: var(--white);
-        flex-shrink: 0;
-        z-index: 10;
-      }
-      .tab-btn {
-        flex: 1;
-        padding: 10px 8px 14px;
-        border: none;
-        border-top: 2px solid transparent;
-        background: none;
-        font-family: 'DM Mono', monospace;
-        font-size: 11px;
-        color: var(--muted);
-        cursor: pointer;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 3px;
-        transition: color 0.2s, border-color 0.2s;
-        letter-spacing: 0.04em;
-      }
+      .tab-bar { display: flex; border-top: 1px solid var(--border); background: var(--white); flex-shrink: 0; z-index: 10; }
+      .tab-btn { flex: 1; padding: 10px 8px 14px; border: none; border-top: 2px solid transparent; background: none; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; transition: color 0.2s, border-color 0.2s; letter-spacing: 0.04em; }
       .tab-btn .tab-icon { font-size: 20px; }
       .tab-btn.active { color: var(--accent); border-top-color: var(--accent); }
-
       .chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 10px 14px; }
       .chips::-webkit-scrollbar { display: none; }
       .chip { font-size: 12px; padding: 7px 14px; }
@@ -438,72 +113,37 @@
 </head>
 <body>
 
-<!-- Welcome Modal -->
 <div class="modal-overlay" id="welcomeModal">
   <div class="modal">
     <h3>✉ AI Email Drafter</h3>
     <p>Draft polished emails instantly using AI. Try 2 free drafts on us, or use your own API key for unlimited access.</p>
-
     <button class="modal-btn" onclick="startTrial()">✨ Try free — 2 drafts on us</button>
-
     <div class="divider">or use your own key</div>
-
     <div class="ai-picker">
-      <div class="ai-option selected" id="optClaude" onclick="selectAI('claude')">
-        <div class="ai-logo">🤖</div>
-        <div class="ai-name">Claude</div>
-        <div class="ai-hint">by Anthropic</div>
-      </div>
-      <div class="ai-option" id="optGemini" onclick="selectAI('gemini')">
-        <div class="ai-logo">✦</div>
-        <div class="ai-name">Gemini</div>
-        <div class="ai-hint">by Google</div>
-      </div>
+      <div class="ai-option selected" id="optClaude" onclick="selectAI('claude')"><div class="ai-logo">🤖</div><div class="ai-name">Claude</div><div class="ai-hint">by Anthropic</div></div>
+      <div class="ai-option" id="optGemini" onclick="selectAI('gemini')"><div class="ai-logo">✦</div><div class="ai-name">Gemini</div><div class="ai-hint">by Google</div></div>
     </div>
-
     <input type="password" id="apiKeyInput" placeholder="Paste your API key here…" />
-
-    <div class="modal-note">
-      🤖 <strong>Claude key:</strong> <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys<br>
-      ✦ <strong>Gemini key:</strong> <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> → Get API Key
-    </div>
-
+    <div class="modal-note">🤖 <strong>Claude key:</strong> <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys<br>✦ <strong>Gemini key:</strong> <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> → Get API Key</div>
     <button class="modal-btn outline" onclick="saveApiKey()">USE MY OWN KEY →</button>
   </div>
 </div>
 
-<!-- Trial Used Up Modal -->
 <div class="modal-overlay hidden" id="trialUpModal">
   <div class="modal">
     <div class="trial-up-emoji">🎯</div>
     <h3 class="center">You've used your 2 free drafts!</h3>
     <p class="center">Hope you liked it! Add your own API key to keep drafting — it's free to get started.</p>
-
     <div class="ai-picker">
-      <div class="ai-option selected" id="optClaude2" onclick="selectAI2('claude')">
-        <div class="ai-logo">🤖</div>
-        <div class="ai-name">Claude</div>
-        <div class="ai-hint">by Anthropic</div>
-      </div>
-      <div class="ai-option" id="optGemini2" onclick="selectAI2('gemini')">
-        <div class="ai-logo">✦</div>
-        <div class="ai-name">Gemini</div>
-        <div class="ai-hint">by Google</div>
-      </div>
+      <div class="ai-option selected" id="optClaude2" onclick="selectAI2('claude')"><div class="ai-logo">🤖</div><div class="ai-name">Claude</div><div class="ai-hint">by Anthropic</div></div>
+      <div class="ai-option" id="optGemini2" onclick="selectAI2('gemini')"><div class="ai-logo">✦</div><div class="ai-name">Gemini</div><div class="ai-hint">by Google</div></div>
     </div>
-
     <input type="password" id="apiKeyInput2" placeholder="Paste your API key here…" />
-
-    <div class="modal-note">
-      🤖 <strong>Claude key:</strong> <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys<br>
-      ✦ <strong>Gemini key:</strong> <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> → Get API Key
-    </div>
-
+    <div class="modal-note">🤖 <strong>Claude key:</strong> <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys<br>✦ <strong>Gemini key:</strong> <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> → Get API Key</div>
     <button class="modal-btn" onclick="saveApiKey2()">CONTINUE WITH MY KEY →</button>
   </div>
 </div>
 
-<!-- Header -->
 <div class="header">
   <div class="header-icon">✉</div>
   <span class="header-title">AI Email Drafter</span>
@@ -513,7 +153,6 @@
   </div>
 </div>
 
-<!-- Main -->
 <div class="main">
   <div class="chat-panel" id="chatPanel">
     <div class="chat-messages" id="chatMessages">
@@ -524,7 +163,6 @@
 Try: "Write a follow-up email to a client who hasn't responded in a week"</div>
       </div>
     </div>
-
     <div class="chips">
       <button class="chip" onclick="useChip('Write a follow-up email for me')">📋 Follow-up email</button>
       <button class="chip" onclick="useChip('Write a job application email for me')">🤝 Job application</button>
@@ -533,7 +171,6 @@ Try: "Write a follow-up email to a client who hasn't responded in a week"</div>
       <button class="chip" onclick="useChip('Write an email to decline an invitation')">❌ Decline invitation</button>
       <button class="chip" onclick="useChip('Write a meeting request email for me')">💼 Meeting request</button>
     </div>
-
     <div class="chat-input-area">
       <textarea id="userInput" placeholder="Describe the email you need…" rows="2" onkeydown="handleKey(event)"></textarea>
       <button class="send-btn" id="sendBtn" onclick="sendMessage()">SEND →</button>
@@ -554,14 +191,9 @@ Try: "Write a follow-up email to a client who hasn't responded in a week"</div>
   </div>
 </div>
 
-<!-- Mobile Tab Bar -->
 <div class="tab-bar">
-  <button class="tab-btn active" id="tabChat" onclick="switchTab('chat')">
-    <span class="tab-icon">💬</span>CHAT
-  </button>
-  <button class="tab-btn" id="tabDraft" onclick="switchTab('draft')">
-    <span class="tab-icon">📝</span>DRAFT
-  </button>
+  <button class="tab-btn active" id="tabChat" onclick="switchTab('chat')"><span class="tab-icon">💬</span>CHAT</button>
+  <button class="tab-btn" id="tabDraft" onclick="switchTab('draft')"><span class="tab-icon">📝</span>DRAFT</button>
 </div>
 
 <script>
@@ -571,130 +203,28 @@ Try: "Write a follow-up email to a client who hasn't responded in a week"</div>
   const TRIAL_LIMIT = 2;
   // ────────────────────────
 
-  let apiKey = '';
-  let aiProvider = 'claude';
-  let isTrial = false;
+  let apiKey = '', aiProvider = 'claude', isTrial = false, currentEmail = null;
   let trialUsed = parseInt(localStorage.getItem('trialUsed') || '0');
-  let currentEmail = null;
 
   const SYSTEM_PROMPT = `You are an expert email drafting assistant. When a user describes an email they need, draft it professionally.
 Always respond with a JSON object ONLY (no markdown, no extra text) in this exact format:
-{
-  "reply": "A brief friendly message acknowledging the request and mentioning the tone/style chosen",
-  "to": "Suggested recipient description or empty string",
-  "subject": "Email subject line",
-  "body": "Full email body with proper greeting, paragraphs, and sign-off. Use \\n for line breaks."
-}`;
+{"reply":"...","to":"...","subject":"...","body":"..."}`;
 
-  function selectAI(p) {
-    aiProvider = p;
-    document.getElementById('optClaude').classList.toggle('selected', p === 'claude');
-    document.getElementById('optGemini').classList.toggle('selected', p === 'gemini');
-  }
-
-  function selectAI2(p) {
-    aiProvider = p;
-    document.getElementById('optClaude2').classList.toggle('selected', p === 'claude');
-    document.getElementById('optGemini2').classList.toggle('selected', p === 'gemini');
-  }
-
-  function startTrial() {
-    if (trialUsed >= TRIAL_LIMIT) { showTrialUpModal(); return; }
-    isTrial = true;
-    aiProvider = 'gemini';
-    apiKey = MY_GEMINI_KEY;
-    document.getElementById('welcomeModal').classList.add('hidden');
-    updateTrialBadge();
-  }
-
-  function saveApiKey() {
-    const key = document.getElementById('apiKeyInput').value.trim();
-    if (!key) { alert('Please paste your API key first.'); return; }
-    isTrial = false;
-    apiKey = key;
-    document.getElementById('welcomeModal').classList.add('hidden');
-    updateTrialBadge();
-  }
-
-  function saveApiKey2() {
-    const key = document.getElementById('apiKeyInput2').value.trim();
-    if (!key) { alert('Please paste your API key first.'); return; }
-    isTrial = false;
-    apiKey = key;
-    document.getElementById('trialUpModal').classList.add('hidden');
-    updateTrialBadge();
-  }
-
-  function updateTrialBadge() {
-    const badge = document.getElementById('trialBadge');
-    const left = TRIAL_LIMIT - trialUsed;
-    if (isTrial && left > 0) {
-      badge.style.display = 'inline';
-      badge.textContent = left === 1 ? '1 trial left' : `${left} trials left`;
-    } else {
-      badge.style.display = 'none';
-    }
-  }
-
-  function showTrialUpModal() {
-    document.getElementById('welcomeModal').classList.add('hidden');
-    document.getElementById('trialUpModal').classList.remove('hidden');
-  }
-
-  function switchTab(tab) {
-    document.getElementById('tabChat').classList.toggle('active', tab === 'chat');
-    document.getElementById('tabDraft').classList.toggle('active', tab === 'draft');
-    document.getElementById('chatPanel').classList.toggle('hidden', tab !== 'chat');
-    document.getElementById('emailPanel').classList.toggle('hidden', tab !== 'draft');
-  }
-
-  function handleKey(e) {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-  }
-
-  function useChip(text) {
-    document.getElementById('userInput').value = text;
-    sendMessage();
-  }
-
-  function addMessage(role, text) {
-    const container = document.getElementById('chatMessages');
-    const div = document.createElement('div');
-    div.className = `msg ${role}`;
-    div.innerHTML = `<div class="avatar ${role}">${role === 'ai' ? '✦' : 'U'}</div><div class="bubble">${text}</div>`;
-    container.appendChild(div);
-    container.scrollTop = container.scrollHeight;
-  }
-
-  function showTyping() {
-    const c = document.getElementById('chatMessages');
-    const div = document.createElement('div');
-    div.className = 'msg ai'; div.id = 'typing';
-    div.innerHTML = `<div class="avatar ai">✦</div><div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
-    c.appendChild(div); c.scrollTop = c.scrollHeight;
-  }
-
-  function removeTyping() { const t = document.getElementById('typing'); if (t) t.remove(); }
-
-  function renderEmail(data) {
-    currentEmail = data;
-    document.getElementById('copyBtn').disabled = false;
-    document.getElementById('emailContent').innerHTML = `
-      <div>
-        ${data.to ? `<div class="email-field"><span class="field-label">To</span><span class="field-val">${data.to}</span></div>` : ''}
-        <div class="email-field"><span class="field-label">Subject</span><span class="field-val field-subject">${data.subject}</span></div>
-        <div class="email-body">${data.body}</div>
-      </div>`;
-    if (window.innerWidth <= 640) switchTab('draft');
-  }
-
-  function copyEmail() {
-    if (!currentEmail) return;
-    navigator.clipboard.writeText(`To: ${currentEmail.to || '[Recipient]'}\nSubject: ${currentEmail.subject}\n\n${currentEmail.body}`);
-    const btn = document.getElementById('copyBtn');
-    btn.textContent = '✓ COPIED';
-    setTimeout(() => btn.textContent = 'COPY ALL', 2000);
-  }
+  function selectAI(p) { aiProvider = p; document.getElementById('optClaude').classList.toggle('selected', p==='claude'); document.getElementById('optGemini').classList.toggle('selected', p==='gemini'); }
+  function selectAI2(p) { aiProvider = p; document.getElementById('optClaude2').classList.toggle('selected', p==='claude'); document.getElementById('optGemini2').classList.toggle('selected', p==='gemini'); }
+  function startTrial() { if (trialUsed >= TRIAL_LIMIT) { showTrialUpModal(); return; } isTrial = true; aiProvider = 'gemini'; apiKey = MY_GEMINI_KEY; document.getElementById('welcomeModal').classList.add('hidden'); updateTrialBadge(); }
+  function saveApiKey() { const k = document.getElementById('apiKeyInput').value.trim(); if (!k) { alert('Please paste your API key first.'); return; } isTrial = false; apiKey = k; document.getElementById('welcomeModal').classList.add('hidden'); updateTrialBadge(); }
+  function saveApiKey2() { const k = document.getElementById('apiKeyInput2').value.trim(); if (!k) { alert('Please paste your API key first.'); return; } isTrial = false; apiKey = k; document.getElementById('trialUpModal').classList.add('hidden'); updateTrialBadge(); }
+  function updateTrialBadge() { const b = document.getElementById('trialBadge'), left = TRIAL_LIMIT - trialUsed; if (isTrial && left > 0) { b.style.display='inline'; b.textContent = left===1?'1 trial left':`${left} trials left`; } else { b.style.display='none'; } }
+  function showTrialUpModal() { document.getElementById('welcomeModal').classList.add('hidden'); document.getElementById('trialUpModal').classList.remove('hidden'); }
+  function switchTab(tab) { document.getElementById('tabChat').classList.toggle('active',tab==='chat'); document.getElementById('tabDraft').classList.toggle('active',tab==='draft'); document.getElementById('chatPanel').classList.toggle('hidden',tab!=='chat'); document.getElementById('emailPanel').classList.toggle('hidden',tab!=='draft'); }
+  function handleKey(e) { if (e.key==='Enter'&&!e.shiftKey) { e.preventDefault(); sendMessage(); } }
+  function useChip(text) { document.getElementById('userInput').value=text; sendMessage(); }
+  function addMessage(role, text) { const c=document.getElementById('chatMessages'),d=document.createElement('div'); d.className=`msg ${role}`; d.innerHTML=`<div class="avatar ${role}">${role==='ai'?'✦':'U'}</div><div class="bubble">${text}</div>`; c.appendChild(d); c.scrollTop=c.scrollHeight; }
+  function showTyping() { const c=document.getElementById('chatMessages'),d=document.createElement('div'); d.className='msg ai'; d.id='typing'; d.innerHTML=`<div class="avatar ai">✦</div><div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`; c.appendChild(d); c.scrollTop=c.scrollHeight; }
+  function removeTyping() { const t=document.getElementById('typing'); if(t) t.remove(); }
+  function renderEmail(data) { currentEmail=data; document.getElementById('copyBtn').disabled=false; document.getElementById('emailContent').innerHTML=`<div>${data.to?`<div class="email-field"><span class="field-label">To</span><span class="field-val">${data.to}</span></div>`:''}<div class="email-field"><span class="field-label">Subject</span><span class="field-val field-subject">${data.subject}</span></div><div class="email-body">${data.body}</div></div>`; if(window.innerWidth<=640) switchTab('draft'); }
+  function copyEmail() { if(!currentEmail) return; navigator.clipboard.writeText(`To: ${currentEmail.to||'[Recipient]'}\nSubject: ${currentEmail.subject}\n\n${currentEmail.body}`); const b=document.getElementById('copyBtn'); b.textContent='✓ COPIED'; setTimeout(()=>b.textContent='COPY ALL',2000); }
 
   async function callClaude(msg) {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -707,67 +237,47 @@ Always respond with a JSON object ONLY (no markdown, no extra text) in this exac
   }
 
   async function callGemini(msg) {
-    const geminiPrompt = `You are an expert email drafting assistant. Respond with ONLY a raw JSON object — no markdown, no backticks, no extra text.
-
+    const prompt = `You are an expert email drafting assistant. Respond with ONLY a raw JSON object — no markdown, no backticks, no extra text.
 The JSON must have exactly these fields:
-{
-  "reply": "A brief friendly message acknowledging the request",
-  "to": "Suggested recipient description or empty string",
-  "subject": "Email subject line",
-  "body": "Full email body with greeting and sign-off. Use \\n for line breaks."
-}
-
+{"reply":"A brief friendly message","to":"Recipient or empty string","subject":"Email subject","body":"Full email body. Use \\n for line breaks."}
 User request: ${msg}`;
 
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: geminiPrompt }] }],
-        generationConfig: { temperature: 0.7, responseMimeType: 'application/json' }
-      })
-    });
-    const data = await res.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+    const models = ['gemini-2.0-flash','gemini-2.0-flash-lite','gemini-1.5-flash','gemini-1.5-flash-8b','gemini-1.5-pro'];
+    for (const model of models) {
+      try {
+        console.log('Trying model:', model);
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.7, responseMimeType: 'application/json' } })
+        });
+        const data = await res.json();
+        console.log(`${model}:`, data);
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) return text.replace(/```json|```/g,'').trim();
+      } catch(e) { console.warn(`${model} failed:`, e); }
+    }
+    throw new Error('All Gemini models failed');
   }
 
   async function sendMessage(text) {
-    const input = document.getElementById('userInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const msg = (text || input.value).trim();
+    const input=document.getElementById('userInput'), sendBtn=document.getElementById('sendBtn');
+    const msg=(text||input.value).trim();
     if (!msg) return;
-
     if (isTrial && trialUsed >= TRIAL_LIMIT) { showTrialUpModal(); return; }
-
-    input.value = '';
-    sendBtn.disabled = true;
-    addMessage('user', msg);
-    showTyping();
-
+    input.value=''; sendBtn.disabled=true;
+    addMessage('user', msg); showTyping();
     try {
-      const raw = aiProvider === 'gemini' ? await callGemini(msg) : await callClaude(msg);
+      const raw = aiProvider==='gemini' ? await callGemini(msg) : await callClaude(msg);
       let parsed;
-      try { parsed = JSON.parse(raw.replace(/```json|```/g, '').trim()); }
+      try { parsed = JSON.parse(raw.replace(/```json|```/g,'').trim()); }
       catch { parsed = { reply: raw, subject: 'Draft Email', body: raw, to: '' }; }
-
       removeTyping();
       addMessage('ai', parsed.reply || 'Here is your drafted email!');
       renderEmail(parsed);
-
-      if (isTrial) {
-        trialUsed++;
-        localStorage.setItem('trialUsed', trialUsed);
-        updateTrialBadge();
-        if (trialUsed >= TRIAL_LIMIT) {
-          setTimeout(() => addMessage('ai', "You've used all 2 free drafts! 🎯 To keep going, refresh the page and add your own API key."), 1000);
-        }
-      }
-    } catch {
-      removeTyping();
-      addMessage('ai', 'Something went wrong. Check your API key and try again.');
-    }
-
-    sendBtn.disabled = false;
+      if (isTrial) { trialUsed++; localStorage.setItem('trialUsed', trialUsed); updateTrialBadge(); if (trialUsed>=TRIAL_LIMIT) setTimeout(()=>addMessage('ai',"You've used all 2 free drafts! 🎯 Refresh and add your own API key to continue."),1000); }
+    } catch { removeTyping(); addMessage('ai','Something went wrong. Check your API key and try again.'); }
+    sendBtn.disabled=false;
   }
 </script>
 </body>
